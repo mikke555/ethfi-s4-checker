@@ -2,6 +2,7 @@ import csv
 from datetime import datetime
 
 import requests
+from rich import print
 
 USE_PROXY = True
 
@@ -15,8 +16,7 @@ with open("proxies.txt") as file:
 
 
 def write_to_csv(address, ethfi, symbiotic, lombard):
-    date = datetime.today().strftime("%Y-%m-%d")
-    file_name = f"s4-{len(addresses)}-accs-{date}.csv"
+    file_name = f"s4-{len(addresses)}-accs-{datetime.now():%Y-%m-%d}.csv"
 
     with open(file_name, "a", newline="") as file:
         writer = csv.writer(file)
@@ -28,8 +28,8 @@ def write_to_csv(address, ethfi, symbiotic, lombard):
             [
                 address,
                 f"{ethfi / 1000:.0f}K",
-                f"{round(symbiotic, 1)}",
-                f"{round(lombard, 1)}",
+                f"{symbiotic:.1f}",
+                f"{lombard:.1f}",
             ]
         )
 
@@ -63,7 +63,7 @@ def main():
             .get("TotalPoints", 0),
         )
 
-        print(f"{address} | ETHFI {ethfi / 1000:.0f}K | Symbiotic {symbiotic:.1f} | Lombard {lombard:.1f}")  # fmt: skip
+        print(f"{address} | ETHFI {ethfi / 1000:>4.0f}K | Symbiotic {symbiotic:>4.1f} | Lombard {lombard:>5.1f}")  # fmt: skip
         write_to_csv(address, ethfi, symbiotic, lombard)
 
 
